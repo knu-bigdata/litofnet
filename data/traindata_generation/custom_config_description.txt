@@ -1,0 +1,238 @@
+========================================================
+ SPAD Histogram Generator Configuration Description
+========================================================
+
+[General Information]
+This file describes each parameter used in `custom_config.json`.
+Boolean values must be lowercase (true / false) according to JSON rules.
+
+--------------------------------------------------------
+use_random_tof : (boolean)
+--------------------------------------------------------
+- If true, time-of-flight (TOF) values are generated randomly.
+- If false, TOF values are loaded from an external file (CSV, TXT, or NPY)
+  whose path must be specified in `tof_file`.
+- Expected file shape: same as `number_of_pixel` (height × width).
+
+Example:
+  "use_random_tof": false
+  "tof_file": "C:/data/tof_map.npy"
+
+--------------------------------------------------------
+number_of_pixel : (array of 2 integers)
+--------------------------------------------------------
+- Specifies the spatial resolution of the simulated histogram.
+- Format: [width, height]
+- Example: [100, 1000] → 192 columns × 56 rows.
+
+--------------------------------------------------------
+tof_file : (string / path)
+--------------------------------------------------------
+- Path to a file containing TOF (time-of-flight) values.
+- Used only if `use_random_tof` is false.
+- Accepted formats: `.csv`, `.txt`, or `.npy`
+- The file should contain one float value per pixel,
+  matching the size given by `number_of_pixel`.
+
+--------------------------------------------------------
+use_random_intensity : (boolean)
+--------------------------------------------------------
+- Controls whether **reflectivity (intensity)** values are generated randomly
+  or loaded from file.
+
+- When true:
+  → Each pixel’s reflectivity is randomly drawn from **uniform(0.1, 0.9)**.
+  → Photon intensity (`INT`) is computed as:
+    INT = INT_FACTOR × (100 / dist)² × reflectivity
+    where `dist` is the distance of the pixel (from `tof_values`).
+
+- When false:
+  → The reflectivity for each pixel is loaded from `intensity_file`.
+  → `INT` is computed based on the loaded reflectivity map.
+
+- In code:
+    if reflec_random == True:
+        reflectivity = round(random.uniform(0.1, 0.9), 3)
+    else:
+        reflectivity = INT  # Loaded value from file
+
+- File format for `intensity_file`: `.csv`, `.txt`, `.npy`
+- File shape: must match `number_of_pixel`.
+
+--------------------------------------------------------
+intensity_file : (string / path)
+--------------------------------------------------------
+- Path to the file containing reflectivity values.
+- Used only when `use_random_intensity` is false.
+- The file should contain a float value (0.0–1.0) for each pixel.
+- Shape: same as `number_of_pixel`.
+
+--------------------------------------------------------
+use_random_noise : (boolean)
+--------------------------------------------------------
+- Controls whether **noise level (NL)** is generated randomly
+  or loaded from file.
+
+- When true:
+  → Each pixel’s noise level is drawn from **uniform(0.1, 100)**,
+    representing dark count or ambient photon noise.
+  → This corresponds to the code:
+      NL = round(random.uniform(0.1, 100), 3)
+
+- When false:
+  → Noise is loaded from `noise_file`:
+      NL = ambient_ppp[i, j]
+
+- File format for `noise_file`: `.csv`, `.txt`, `.npy`
+- File shape: must match `number_of_pixel`.
+
+--------------------------------------------------------
+noise_file : (string / path)
+--------------------------------------------------------
+- Path to the noise map file.
+- Used only if `use_random_noise` is false.
+- Represents ambient photon or dark noise counts per pixel.
+
+--------------------------------------------------------
+seed : (integer)
+--------------------------------------------------------
+-The seed of the random function to ensure reproducibility (seed = 42).
+For real-world use, however, random seeds can be applied to allow stochastic behavior.
+
+--------------------------------------------------------
+num_frame : (integer)
+--------------------------------------------------------
+- Number of histogram frames to generate.
+- Each frame corresponds to one simulated ToF acquisition.
+
+--------------------------------------------------------
+batch_size : (integer)
+--------------------------------------------------------
+- Number of pixels processed in parallel.
+- Increasing this improves speed but increases memory usage.
+
+--------------------------------------------------------
+save_folder : (string / path)
+--------------------------------------------------------
+- Output directory where generated histograms will be saved.
+- Must be accessible (network path supported).
+- Example: "//202.30.23.195/ai_data/lidar_dataset/train_git_repo"
+
+--------------------------------------------------------
+fine_mes : (integer)
+--------------------------------------------------------
+- Number of fine bins (high-resolution ToF bins) per pixel histogram.
+
+--------------------------------------------------------
+pulse_shape_path : (string / path)
+--------------------------------------------------------
+- Path to an external custom pulse shape file.
+- Used only if `pulse_shape` ≠ "default".
+- Accepted formats: `.csv`, `.txt`, `.npy`
+- The file must contain a 1D array representing the laser pulse waveform.
+- Example: pulse_example.csv.
+
+--------------------------------------------------------
+pulse_shape_path : (string / path)
+--------------------------------------------------------
+- Path to an external custom pulse shape file.
+- Used only if `pulse_shape` ≠ "default".
+- Accepted formats: `.csv`, `.txt`, `.npy`
+- The file must contain a 1D array representing the laser pulse waveform.
+
+--------------------------------------------------------
+base_filename : (string)
+--------------------------------------------------------
+- Prefix name for output histogram files.
+- Example: "sample_data" → files like `sample_data_frame_0001.parquet`.
+
+--------------------------------------------------------
+PULSE_RES : (float)
+--------------------------------------------------------
+- Temporal resolution (in nanoseconds per bin) of the laser pulse waveform.
+
+--------------------------------------------------------
+base_params : (object)
+--------------------------------------------------------
+- Contains base physical and timing parameters for the SPAD simulation.
+
+  CRS_DR : Coarse Dynamic Range (ns)
+    - Total time span covered by the coarse ToF bins.
+
+  CRS_RES : Coarse Resolution (ns)
+    - Time resolution per coarse bin (e.g., 13.333 ns).
+
+  CRS_MES : Coarse Measurement Count
+    - Number of coarse bins.
+
+  FINE_DR : Fine Dynamic Range (ns)
+    - Total time span of fine bins.
+
+  FINE_RES : Fine Resolution (ns)
+    - Time resolution per fine bin (e.g., 0.4166 ns).
+
+  FINE_LABEL_RES : Fine Label Resolution (ns)
+    - Label spacing for training data alignment.
+
+  FINE_MES : Fine Measurement Count
+    - Total number of fine histogram bins.
+
+  REP : Repetition Period (ns)
+    - Laser repetition interval.
+
+  PDP : Photon Detection Probability (%)
+    - Percentage of photons detected.
+
+  DT : Dead Time (ns)
+    - Minimum time between two valid photon detections.
+
+  WE : Window Enable Flag
+    - 0 → windowing disabled
+    - 1 → window mode enabled (restricts valid detection range).
+
+  WN : Window Number
+    - Active detection window index when WE = 1.
+
+  DCR : Dark Count Rate (kcps)
+    - Background dark count rate (in kilo-counts per second).
+
+  INT_FACTOR : Intensity scaling factor
+    - Multiplies reflected photon count according to reflectivity.
+
+
+--------------------------------------------------------
+max_coarse_index : (integer)
+--------------------------------------------------------
+- Defines the maximum coarse bin index used for random CTOF generation.
+- The Coarse Time-of-Flight (CTOF) is uniformly sampled as an integer in [0, max_coarse_bin],
+  then multiplied by 13.333 ns to form coarse time offsets.
+
+Example:
+  if CRS_MES = 13.3333" and max_coarse_index": 61
+  → CTOF values ∈ [0 × 13.333, 61 × 13.333] ns
+
+Used only when:
+  "use_random_tof": true
+--------------------------------------------------------
+
+--------------------------------------------------------
+Compute max FTOF (from base_params)
+--------------------------------------------------------
+-만약 너가 random으로 TOF를 생성할때는 생성되는
+FTOF의 범위는 자동으로 계산된다.
+
+Example:
+  if FINE_RES = 0.416666 and FINE_DR = 6
+  → FTOF values ∈ [0 × 0.41666, 2^(6) × 0.41666] ns
+
+--------------------------------------------------------
+
+
+========================================================
+[Important Notes]
+- If any of the `use_random_*` flags are set to false,
+  the corresponding *_file must be specified and accessible.
+- All input maps (TOF, intensity, noise) must match the
+  pixel shape defined in `number_of_pixel`.
+- Boolean values in JSON must be lowercase (true / false).
+========================================================

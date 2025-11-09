@@ -1,0 +1,36 @@
+{
+    "use_random_tof": true,
+    "shape_of_pixel" : [100,1000],
+    "tof_file": "./tof_example.csv",
+    "use_random_intensity": true,
+    "intensity_file": "./intensity_example.txt",
+    "use_random_noise": true,
+    "noise_file": "./noise_example.npy",
+    "seed":42,
+    "num_frame": 1,
+    "batch_size": 2048,
+    "save_folder": "../valid_sample",
+    "fine_mes": 155,
+    "pulse_shape": "default",
+    "pulse_shape_path": "pulse_example.csv",
+    "base_filename": "valid_sample_data",  
+    "PULSE_RES": 0.02,
+    "max_coarse_index": 61,
+
+    "base_params": {
+        "CRS_DR": 6,
+        "CRS_RES": 13.333333,
+        "CRS_MES": 300,
+        "FINE_DR": 6,
+        "FINE_RES": 0.4166666,
+        "FINE_LABEL_RES": 0.4166666,
+        "FINE_MES" : 155,
+        "REP": 3000,
+        "PDP": 8,
+        "DT": 10,
+        "WE": 0,
+        "WN": 0,
+        "DCR": 0.1,
+        "INT_FACTOR": 1
+    }
+}
