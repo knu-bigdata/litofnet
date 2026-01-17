@@ -4,8 +4,8 @@
 # A Paradigm Shift in High-Resolution Depth Estimation Using SPAD-Based LiDAR Histograms: From Signal Filtering to Lightweight Similarity Learning
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-green">
   <img alt="Conference" src="https://img.shields.io/badge/AAAI-2026-red">
+  <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-green">
   <img alt="Python" src="https://img.shields.io/badge/python-3.10-blue">
   <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-2.1.0-EE4C2C?logo=pytorch&logoColor=white">
   <img alt="CUDA" src="https://img.shields.io/badge/CUDA-11.8-76B900?logo=nvidia&logoColor=white">
@@ -308,5 +308,6 @@ The most recently saved checkpoint corresponds to the best-trained version of th
 
 The file `litofnet_bitstream.bit` is a bitstream generated based on `weights/litofnet_weights.pth.`
 The FPGA used for implementation is the Kintex XEM7360-K160 from Opal Kelly.
+
 
 
