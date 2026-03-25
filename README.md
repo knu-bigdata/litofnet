@@ -309,5 +309,21 @@ The most recently saved checkpoint corresponds to the best-trained version of th
 The file `litofnet_bitstream.bit` is a bitstream generated based on `weights/litofnet_weights.pth.`
 The FPGA used for implementation is the Kintex XEM7360-K160 from Opal Kelly.
 
+## 9. Citation
 
+If you find this code or research helpful, please consider citing our paper:
 
+```bibtex
+@article{Lee_Kim_Park_Seo_Lee_2026,
+  author       = {Lee, Minsung and Kim, Seo Hyun and Park, Yeonsu and Seo, Hyeongseok and Lee, Jongmin},
+  title        = {A Paradigm Shift in High-Resolution Depth Estimation Using SPAD-Based LiDAR Histograms: From Signal Filtering to Lightweight Similarity Learning},
+  journal      = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year         = {2026},
+  month        = {Mar.},
+  volume       = {40},
+  number       = {8},
+  pages        = {5909--5917},
+  doi          = {10.1609/aaai.v40i8.37513},
+  url          = {https://ojs.aaai.org/index.php/AAAI/article/view/37513}
+}
+```
